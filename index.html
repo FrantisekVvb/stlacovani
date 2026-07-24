@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
+  />
+  <title>Stlačování látek</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+</head>
+<body>
+  <main class="scene" aria-label="Simulace stlačování látek">
+    <header class="scene-header">
+      <h1>Stlačování látek</h1>
+      <div class="subject-control" role="group" aria-label="Druh látky">
+        <button
+          type="button"
+          class="subject-btn is-active"
+          data-scene="solid"
+          aria-pressed="true"
+        >
+          pevná
+        </button>
+        <button
+          type="button"
+          class="subject-btn"
+          data-scene="liquid"
+          aria-pressed="false"
+        >
+          kapalná
+        </button>
+        <button
+          type="button"
+          class="subject-btn"
+          data-scene="gas"
+          aria-pressed="false"
+        >
+          plynná
+        </button>
+      </div>
+      <p class="scene-hint" id="hintEl">Táhni píst dolů nebo nahoru a zkus stlačit pevnou látku.</p>
+    </header>
+
+    <div class="stage-slot">
+      <div class="stage" id="stage">
+        <div id="lottie" class="lottie" aria-label="Lis s pevnou látkou"></div>
+        <div
+          class="piston-hit"
+          id="pistonHit"
+          role="slider"
+          tabindex="0"
+          aria-label="Píst lisu"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+          aria-valuetext="Píst nahoře"
+        ></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

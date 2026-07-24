@@ -1,0 +1,13 @@
+{
+  "name": "stlacovani-latek",
+  "version": "1.0.0",
+  "description": "Stlačování látek — lis s pevnou látkou a pohyblivým pístem",
+  "license": "MIT",
+  "scripts": {
+    "start": "npx --yes serve . -l 3480",
+    "dev": "npm start"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
