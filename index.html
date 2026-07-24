@@ -12,51 +12,68 @@
 </head>
 <body>
   <main class="scene" aria-label="Simulace stlačování látek">
-    <header class="scene-header">
-      <h1>Stlačování látek</h1>
-      <div class="subject-control" role="group" aria-label="Druh látky">
-        <button
-          type="button"
-          class="subject-btn is-active"
-          data-scene="solid"
-          aria-pressed="true"
-        >
-          pevná
-        </button>
-        <button
-          type="button"
-          class="subject-btn"
-          data-scene="liquid"
-          aria-pressed="false"
-        >
-          kapalná
-        </button>
-        <button
-          type="button"
-          class="subject-btn"
-          data-scene="gas"
-          aria-pressed="false"
-        >
-          plynná
-        </button>
-      </div>
-      <p class="scene-hint" id="hintEl">Táhni píst dolů nebo nahoru a zkus stlačit pevnou látku.</p>
-    </header>
+    <aside class="setup-panel" aria-label="Nastavení simulace">
+      <a
+        href="https://frantisekvvb.github.io/fyzikalnisimulace/"
+        class="hub-back-to-sims"
+      >
+        ← Přehled simulací
+      </a>
 
-    <div class="stage-slot">
-      <div class="stage" id="stage">
-        <div id="lottie" class="lottie" aria-label="Lis s pevnou látkou"></div>
-        <div
-          class="piston-hit"
-          id="pistonHit"
-          role="slider"
-          tabindex="0"
-          aria-label="Píst lisu"
-          aria-valuemin="0"
-          aria-valuemax="100"
-          aria-valuenow="0"
-          aria-valuetext="Píst nahoře"
-        ></div>
+      <div class="panel-copy">
+        <h1 class="panel-title">Stlačování látek</h1>
+        <p class="panel-hint" id="hintEl">
+          Táhni píst dolů nebo nahoru a zkus stlačit pevnou látku.
+        </p>
+      </div>
+
+      <div class="panel-section subject-control" role="group" aria-label="Druh látky">
+        <span class="panel-label">Druh látky</span>
+        <div class="subject-control__buttons">
+          <button
+            type="button"
+            class="subject-btn is-active"
+            data-scene="solid"
+            aria-pressed="true"
+          >
+            pevná
+          </button>
+          <button
+            type="button"
+            class="subject-btn"
+            data-scene="liquid"
+            aria-pressed="false"
+          >
+            kapalná
+          </button>
+          <button
+            type="button"
+            class="subject-btn"
+            data-scene="gas"
+            aria-pressed="false"
+          >
+            plynná
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="scene-workspace" aria-label="Vizualizace lisu">
+      <div class="stage-slot">
+        <div class="stage" id="stage">
+          <div id="lottie" class="lottie" aria-label="Lis s pevnou látkou"></div>
+          <div
+            class="piston-hit"
+            id="pistonHit"
+            role="slider"
+            tabindex="0"
+            aria-label="Píst lisu"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
+            aria-valuetext="Píst nahoře"
+          ></div>
+        </div>
       </div>
     </div>
   </main>
