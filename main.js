@@ -880,7 +880,10 @@ if (stageEl && typeof ResizeObserver !== "undefined") {
 
 sceneButtons.forEach((button) => {
   button.addEventListener("click", () => {
+    const wasQuiz = window.stlacovaniQuiz?.isActive?.();
+    window.stlacovaniQuiz?.exit();
     loadScene(button.dataset.scene);
+    if (wasQuiz) updateSceneControls();
   });
 });
 
