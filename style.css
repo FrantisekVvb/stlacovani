@@ -660,8 +660,22 @@ button {
 }
 
 .quiz-card.is-dragging {
-  opacity: 0.72;
+  opacity: 0.45;
   cursor: grabbing;
+}
+
+.quiz-card-ghost {
+  position: fixed;
+  z-index: 10000;
+  margin: 0;
+  pointer-events: none;
+  box-shadow: 0 10px 28px rgba(30, 41, 68, 0.22);
+  border-color: var(--accent);
+  background: #ffffff;
+  opacity: 1;
+  cursor: grabbing;
+  transform: scale(1.03);
+  will-change: left, top;
 }
 
 .quiz-card.is-correct {

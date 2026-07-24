@@ -46,7 +46,7 @@ function createPropertyCard(property) {
   card.className = "quiz-card";
   card.dataset.propertyId = property.id;
   card.textContent = property.text;
-  card.draggable = true;
+  card.draggable = false;
   card.addEventListener("click", () => onPropertyClick(property.id));
   card.addEventListener("dragstart", (event) => onDragStart(event, property.id));
   card.addEventListener("dragend", onDragEnd);
@@ -198,6 +198,7 @@ function removeAssignment(propertyId, stateId) {
 }
 
 function onDragStart(event, propertyId) {
+  clearDragGhost();
   event.dataTransfer.setData("text/plain", propertyId);
   event.dataTransfer.effectAllowed = "copy";
   const card = getPoolCardElement(propertyId);
@@ -206,6 +207,41 @@ function onDragStart(event, propertyId) {
 
 function onDragEnd(event) {
   event.target.classList.remove("is-dragging");
+  event.target.draggable = false;
+  clearDragGhost();
+}
+
+function clearDragGhost() {
+  dragState?.ghost?.remove();
+  if (dragState) dragState.ghost = null;
+  document.querySelectorAll(".quiz-card-ghost").forEach((node) => node.remove());
+}
+
+function createDragGhost(card, clientX, clientY) {
+  clearDragGhost();
+  const rect = card.getBoundingClientRect();
+  const ghost = card.cloneNode(true);
+  ghost.removeAttribute("id");
+  ghost.draggable = false;
+  ghost.classList.remove("is-selected", "is-dragging");
+  ghost.classList.add("quiz-card-ghost");
+  ghost.style.width = `${rect.width}px`;
+  ghost.style.height = `${rect.height}px`;
+  ghost.style.left = `${rect.left}px`;
+  ghost.style.top = `${rect.top}px`;
+  document.body.append(ghost);
+
+  return {
+    ghost,
+    offsetX: clientX - rect.left,
+    offsetY: clientY - rect.top,
+  };
+}
+
+function moveDragGhost(clientX, clientY) {
+  if (!dragState?.ghost) return;
+  dragState.ghost.style.left = `${clientX - dragState.offsetX}px`;
+  dragState.ghost.style.top = `${clientY - dragState.offsetY}px`;
 }
 
 function onDragOver(event) {
@@ -233,14 +269,28 @@ function onDrop(event, stateId) {
 
 function onPointerDownCard(event, propertyId) {
   if (event.button !== 0) return;
+
+  const card = event.currentTarget;
+
+  // Desktop: nativní HTML5 drag (má vlastní náhled).
+  if (event.pointerType === "mouse") {
+    card.draggable = true;
+    return;
+  }
+
+  // Touch / tablet: vlastní drag s viditelným boxem pod prstem.
+  card.draggable = false;
   dragState = {
     propertyId,
     pointerId: event.pointerId,
     startX: event.clientX,
     startY: event.clientY,
     moved: false,
+    ghost: null,
+    offsetX: 0,
+    offsetY: 0,
   };
-  event.currentTarget.setPointerCapture(event.pointerId);
+  card.setPointerCapture(event.pointerId);
 }
 
 function onPointerMove(event) {
@@ -250,9 +300,20 @@ function onPointerMove(event) {
   const dy = event.clientY - dragState.startY;
   if (!dragState.moved && Math.hypot(dx, dy) < 8) return;
 
-  dragState.moved = true;
   const card = getPoolCardElement(dragState.propertyId);
-  if (card) card.classList.add("is-dragging");
+  if (!card) return;
+
+  if (!dragState.moved) {
+    dragState.moved = true;
+    const ghostInfo = createDragGhost(card, event.clientX, event.clientY);
+    dragState.ghost = ghostInfo.ghost;
+    dragState.offsetX = ghostInfo.offsetX;
+    dragState.offsetY = ghostInfo.offsetY;
+    card.classList.add("is-dragging");
+  }
+
+  event.preventDefault();
+  moveDragGhost(event.clientX, event.clientY);
 
   document.querySelectorAll(".quiz-dropzone").forEach((zone) => {
     zone.classList.remove("is-drop-target");
@@ -267,6 +328,7 @@ function onPointerUp(event) {
   if (!dragState || event.pointerId !== dragState.pointerId) return;
 
   const { propertyId, moved } = dragState;
+  clearDragGhost();
   dragState = null;
 
   const card = getPoolCardElement(propertyId);
@@ -513,6 +575,6 @@ if (btnQuizReset) {
   btnQuizReset.addEventListener("click", resetQuiz);
 }
 
-window.addEventListener("pointermove", onPointerMove);
+window.addEventListener("pointermove", onPointerMove, { passive: false });
 window.addEventListener("pointerup", onPointerUp);
 window.addEventListener("pointercancel", onPointerUp);
